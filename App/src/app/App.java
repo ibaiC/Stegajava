@@ -43,7 +43,7 @@ public class App {
             BufferedImage originalImage = ImageIO.read(new File(ImagePath));
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write( originalImage, "jpg", baos );
+            ImageIO.write( originalImage, "bmp", baos );
             baos.flush();
             byte [] imageInByte = baos.toByteArray();
             baos.close();
