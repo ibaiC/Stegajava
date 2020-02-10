@@ -3,7 +3,6 @@ package app;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,9 +13,9 @@ public class App {
         // System.out.println(TextToBinary("hello dawg"));
         // TextToBinary("hello dawg");
         // System.out.println(BinaryToText(TextToBinary("hello dawg")));
-        System.out.println(Encode(TextToBinary("hello dawg"), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp")));
-        System.out.println(imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp"));
-
+        System.out.println(Encode(TextToBinary("hello dawg"), imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp")));
+        System.out.println(imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp"));
+        ByteArrayToImage(Encode(TextToBinary("hello dawg"), imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp")));
         // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
         // System.out.println("Hello Java");
         // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
@@ -101,8 +100,8 @@ public class App {
             Integer length = binary.length();
             String lengthBinary = Integer.toBinaryString(length);
             int lengthBinaryLength = lengthBinary.length();
-            Integer magicBytes = 2;
-            String binaryAndLength = binary+lengthBinary;
+            Integer magicBytes = 54;
+            String binaryAndLength = lengthBinary+binary;
             for(int i=0; i < (length+lengthBinaryLength); i++){
                 byte currentByte = bitMap[magicBytes+i];
                 String binaryByte = Integer.toBinaryString(currentByte);
