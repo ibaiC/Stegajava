@@ -3,6 +3,7 @@ package app;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.ByteArrayInputStream;
@@ -20,7 +21,7 @@ public class App {
         // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
         // System.out.println("Hello Java");
         // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
-        ByteArrayToImage(Encode(TextToBinary("hello dawg"), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp")));
+        Decode(imageToBitMap("directoryofencodedimage"));
         // System.out.println(System.getProperty("user.dir"));
     }
 
@@ -137,9 +138,23 @@ public class App {
         return bitMap;
 
     } 
-    // public static Image Decode(String binary? , Number[][] bitMap?, Integer length){
-    //     return DecodedData;
+    public static String Decode(byte[] bitMap){
 
-    // } 
+        int lengthBinaryLengthInBytes = 8;
+        Integer magicBytes = 54;
+
+        byte[] length = Arrays.copyOfRange(bitMap, magicBytes, magicBytes+lengthBinaryLengthInBytes);
+        ByteBuffer wrapped = ByteBuffer.wrap(length); // big-endian by default
+        Integer dataBitLength = wrapped.getInt(); 
+        String decodedBits = "";
+
+        for(int i=0; i < (dataBitLength); i++){
+            byte currentByte = bitMap[magicBytes+i];
+            String binaryByte = Integer.toBinaryString(currentByte);
+            decodedBits += binaryByte.charAt(-1);
+        }
+        return decodedBits;
+
+    } 
 
 }
