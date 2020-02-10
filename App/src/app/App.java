@@ -14,13 +14,13 @@ public class App {
         // System.out.println(TextToBinary("hello dawg"));
         // TextToBinary("hello dawg");
         // System.out.println(BinaryToText(TextToBinary("hello dawg")));
-        System.out.println(Encode(TextToBinary("hello dawg"), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp")));
-        System.out.println(imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp"));
+        // System.out.println(Encode(TextToBinary("hello dawg"), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp")));
+        // System.out.println(imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp"));
 
         // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
         // System.out.println("Hello Java");
         // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
-        // ByteArrayToImage(imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp"));
+        ByteArrayToImage(Encode(TextToBinary("hello dawg"), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp")));
         // System.out.println(System.getProperty("user.dir"));
     }
 
@@ -66,7 +66,7 @@ public class App {
     public static void ByteArrayToImage(byte[] bitMap) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(bitMap);
         BufferedImage newImage = ImageIO.read(bis);
-        ImageIO.write(newImage, "bmp", new File("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/output.bmp"));
+        ImageIO.write(newImage, "bmp", new File(System.getProperty("user.dir")));
         System.out.println("The new image has been saved successfully! DEBUG: Currently gets saved to /res folder as output.bmp");
         // To get current directory do;
         // System.getProperty("user.dir");
@@ -101,28 +101,36 @@ public class App {
             Integer length = binary.length();
             String lengthBinary = Integer.toBinaryString(length);
             int lengthBinaryLength = lengthBinary.length();
-            Integer magicBytes = 2;
-            String binaryAndLength = binary+lengthBinary;
+            Integer magicBytes = 54;
+            String binaryAndLength = lengthBinary+binary;
+            System.out.println("HERE:" + lengthBinaryLength);
+
+            try {
+                if(lengthBinaryLength<=64){
+                    int numberOfZerosToAddToTheLeft = 64-lengthBinaryLength;
+                    lengthBinary = "0".repeat( numberOfZerosToAddToTheLeft ) + lengthBinary;
+                }
+                else {
+                    throw new Exception();
+                };
+                
+            } 
+            
+            catch (Exception e) {
+                System.out.println("message too big to encode");
+            }
+
             for(int i=0; i < (length+lengthBinaryLength); i++){
                 byte currentByte = bitMap[magicBytes+i];
                 String binaryByte = Integer.toBinaryString(currentByte);
 
                 if(binaryByte.charAt(binaryByte.length() -1) != binaryAndLength.charAt(i)){ 
-                    // int a = Integer.parseInt(binaryByte);
                     currentByte^=1<<1;
-                    // a + binaryAndLength.charAt(i);
                 }
-
-                // ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-                // outputStream.write( currentByte );
-                // byte encodedBytes[] = outputStream.toByteArray( );
                 bitMap[magicBytes+i] = currentByte;
 
 
             }
-            // for(int i=0; i < (length+lengthBinaryLength); i++){
-            // bitMap[i] = encodedBytes[i];
-            // }
             System.out.println("Printing new byte array...");
             System.out.println(Arrays.toString(Arrays.copyOfRange(bitMap, 0, 300)));
 
