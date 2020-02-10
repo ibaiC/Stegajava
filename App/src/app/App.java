@@ -3,6 +3,7 @@ package app;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,7 +20,7 @@ public class App {
         // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
         // System.out.println("Hello Java");
         // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
-        // ByteArrayToImage(Encode(TextToBinary("hello dawg"), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp")));
+        BinaryToText(Decode(imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/output.bmp")));
         // System.out.println(System.getProperty("user.dir"));
     }
 
@@ -75,27 +76,23 @@ public class App {
         String Text = "";
         String bit;
         int charCode;
+
+        // Pad string
+        if (binary.length() % 8 != 0) {
+            int numberOfZerosToAddToTheLeft = 8 -(binary.length() % 8);
+            binary = "0".repeat( numberOfZerosToAddToTheLeft ) + binary;
+        }
+
         for(int i=0; i<binary.length(); i=i+8){
             bit = binary.substring(i,i+8);
             charCode = Integer.parseInt(bit, 2);
             Text = Text + String.valueOf(Character.toChars(charCode));
         }
+        System.out.println(Text);
         return Text;
 
-    } 
-    // public static String TextToBinary(String text){
-    //     return "binary";
+    }
 
-    // } 
-    
-    // public static Number[][] BitMapToImage(Number[][] bitMap){
-    //     return image;
-
-    // } 
-    // public static String BinaryToText(String binary){
-    //     return Text;
-
-    // } 
     public static byte[] Encode(String binary , byte[] bitMap){
             Integer length = binary.length();
             String lengthBinary = Integer.toBinaryString(length);
@@ -136,9 +133,61 @@ public class App {
         return bitMap;
 
     } 
-    // public static Image Decode(String binary? , Number[][] bitMap?, Integer length){
-    //     return DecodedData;
+    // public static String Decode(byte[] bitMap){
+
+    //     int lengthBinaryLengthInBytes = 8;
+    //     Integer magicBytes = 54;
+
+    //     byte[] length = Arrays.copyOfRange(bitMap, magicBytes, magicBytes+lengthBinaryLengthInBytes);
+    //     String dataBitLength = "";
+    //     for (byte number : length) {
+    //         dataBitLength = dataBitLength + Integer.toBinaryString(number);
+    //     }
+    //     int charCode = Integer.parseInt(dataBitLength, 2);
+    //     System.out.println(charCode);
+    //     String decodedBits = "";
+    //     System.out.println(dataBitLength);
+
+    //     // for(int i=0; i < (dataBitLength); i++){
+    //     //     byte currentByte = bitMap[magicBytes+i];
+    //     //     String binaryByte = Integer.toBinaryString(currentByte);
+    //     //     decodedBits += binaryByte.charAt(binaryByte.length()-1);
+    //     // }
+    //     return decodedBits;
 
     // } 
+    public static String Decode(byte[] bitMap){
+        int lengthBinaryLengthInBytes = 8;
+        Integer magicBytes = 54;
+
+        byte[] length = Arrays.copyOfRange(bitMap, magicBytes, magicBytes+lengthBinaryLengthInBytes);
+        // ByteBuffer wrapped = ByteBuffer.wrap(length); // big-endian by default
+        // Integer dataBitLength = wrapped.getInt(); 
+        String decodedBits = "";
+        int dataBitLength = 0;
+        String bit;
+
+        for (byte b1 : length){
+			String s1 = String.format("%8s", Integer.toBinaryString(b1 & 0xFF)).replace(' ', '0');
+            System.out.println(s1);  
+            
+
+            for(int i=0; i<s1.length(); i=i+8){
+                bit = s1.substring(i,i+8);
+                dataBitLength += Integer.parseInt(bit, 2);
+            }
+        }
+        System.out.println(dataBitLength);
+
+        
+
+        for(int i=0; i < (dataBitLength); i++){
+            byte currentByte = bitMap[magicBytes+i];
+            String binaryByte = Integer.toBinaryString(currentByte);
+            decodedBits += binaryByte.charAt(binaryByte.length()-1);
+        }
+        return decodedBits;
+
+    }
 
 }
