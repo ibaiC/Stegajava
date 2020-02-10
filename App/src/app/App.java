@@ -3,17 +3,20 @@ package app;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.io.ByteArrayOutputStream;
 import javax.imageio.ImageIO;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        System.out.println(TextToBinary("hello dawg"));
+        // System.out.println(TextToBinary("hello dawg"));
         // TextToBinary("hello dawg");
-        System.out.println(BinaryToText(TextToBinary("hello dawg")));
-        System.out.println("Hello Java");
-        imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
+        // System.out.println(BinaryToText(TextToBinary("hello dawg")));
+        System.out.println(Encode(TextToBinary("hello dawg"), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp")));
+        System.out.println(imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/boats.bmp"));
+
+        // imageToBitMap("/home/ibai/Documents/Uni/forensics/workspace/forensics/App/res/boats.bmp");
     }
 
     // public static Number[][] imageToBitMap(Image image){
@@ -32,7 +35,7 @@ public class App {
               val <<= 1;
            }
         }
-        System.out.println("'" + text + "' to binary: " + binary);
+        // System.out.println("'" + text + "' to binary: " + binary);
         return binary.toString();
     }
 
@@ -47,8 +50,8 @@ public class App {
             baos.flush();
             byte [] imageInByte = baos.toByteArray();
             baos.close();
-            System.out.println(Arrays.toString(imageInByte));
-            System.out.println(imageInByte.length);
+            System.out.println(Arrays.toString(Arrays.copyOfRange(imageInByte, 0, 300)));
+            // System.out.println(imageInByte.length);
             return imageInByte;
         }   
 
@@ -87,10 +90,38 @@ public class App {
     //     return Text;
 
     // } 
-    // public static Image Encode(String binary? , Number[][] bitMap?, Integer length){
-    //     return EncodedImage;
+    public static byte[] Encode(String binary , byte[] bitMap){
+            Integer length = binary.length();
+            String lengthBinary = Integer.toBinaryString(length);
+            int lengthBinaryLength = lengthBinary.length();
+            Integer magicBytes = 2;
+            String binaryAndLength = binary+lengthBinary;
+            for(int i=0; i < (length+lengthBinaryLength); i++){
+                byte currentByte = bitMap[magicBytes+i];
+                String binaryByte = Integer.toBinaryString(currentByte);
 
-    // } 
+                if(binaryByte.charAt(binaryByte.length() -1) != binaryAndLength.charAt(i)){ 
+                    // int a = Integer.parseInt(binaryByte);
+                    currentByte^=1<<1;
+                    // a + binaryAndLength.charAt(i);
+                }
+
+                // ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+                // outputStream.write( currentByte );
+                // byte encodedBytes[] = outputStream.toByteArray( );
+                bitMap[magicBytes+i] = currentByte;
+
+
+            }
+            // for(int i=0; i < (length+lengthBinaryLength); i++){
+            // bitMap[i] = encodedBytes[i];
+            // }
+            System.out.println("Printing new byte array...");
+            System.out.println(Arrays.toString(Arrays.copyOfRange(bitMap, 0, 300)));
+
+        return bitMap;
+
+    } 
     // public static Image Decode(String binary? , Number[][] bitMap?, Integer length){
     //     return DecodedData;
 
