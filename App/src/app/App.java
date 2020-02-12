@@ -120,20 +120,8 @@ public class App {
         System.out.println("Decoded text: " + Text);
         return Text;
 
-    } 
-    // public static String TextToBinary(String text){
-    //     return "binary";
+    }
 
-    // } 
-    
-    // public static Number[][] BitMapToImage(Number[][] bitMap){
-    //     return image;
-
-    // } 
-    // public static String BinaryToText(String binary){
-    //     return Text;
-
-    // } 
     public static byte[] Encode(String binary , byte[] bitMap){
             Integer length = binary.length();
             String lengthBinary = Integer.toBinaryString(length);
@@ -211,7 +199,7 @@ public class App {
 
         return decodedBits;
 
-    } 
+    }
 
     public static String byteArrayToBinary(byte[] bitMap) {
         String binaryString = "";
