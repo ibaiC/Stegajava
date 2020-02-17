@@ -1,27 +1,92 @@
 package app;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-
-import java.io.ByteArrayOutputStream;
 import javax.imageio.ImageIO;
 
+import java.util.Arrays;
+import java.util.Scanner;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        System.out.println(TextToBinary("hello dawg"));
+        // System.out.println(TextToBinary("hello dawg"));
         // TextToBinary("hello dawg");
         // System.out.println(BinaryToText(TextToBinary("hello dawg")));
         // ByteArrayToImage(Encode(TextToBinary("hello dawg"), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/baboon.bmp")));
-        ByteArrayToImage(Encode(byteArrayToBinary(imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/tigerSmall.bmp")), imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/baboon.bmp")));
+
+        // Print menu and ask what the user wants to do
+        Scanner scanning = new Scanner(System.in);
+        System.out.print("Stegonography menu: ");
+        System.out.println("Type 1 to ENCODE an IMAGE\nType 2 to ENCODE TEXT\nType 3 to DECODE an IMAGE\nType 4 to DECODE TEXT");
+        String choice = scanning.next();
+        scanning.close();
+
+        switch(choice) {
+            case "1": // ENCODE IMAGE
+                // Get secret image path
+                Scanner scan = new Scanner(System.in);
+                System.out.print("Path to secret image: ");
+                String secretImagePath = scan.next();
+                scan.close();
+
+                // Get cover image path
+                Scanner scan_two = new Scanner(System.in);
+                System.out.print("Path to cover image: ");
+                String coverImagePath = scan_two.next();
+                scan_two.close();
+
+                // Get output path
+                Scanner scan_three = new Scanner(System.in);
+                System.out.print("Path to output file (include filename and extension): ");
+                String outputPath = scan_three.next();
+                scan_three.close();
+
+                // Encode
+                ByteArrayToImage(Encode(byteArrayToBinary(imageToBitMap(secretImagePath)), imageToBitMap(coverImagePath)));
+                ByteArrayToImage(binaryToByteArray(Decode(imageToBitMap(outputPath))));
+              break;
+            case "2": // ENCODE TEXT
+                // Get text to encode
+                Scanner scan_four = new Scanner(System.in);
+                System.out.print("Text to encode: ");
+                String secretText = scan_four.next();
+                scan_four.close();
+
+                // Get text to encode
+                Scanner scan_five = new Scanner(System.in);
+                System.out.print("Text to encode: ");
+                String coverImage = scan_four.next();
+                scan_five.close();
+
+                ByteArrayToImage(Encode(TextToBinary(secretText), imageToBitMap(coverImage)));
+                break;
+            case "3": // DECODE IMAGE
+
+                break;
+
+            case "4": // DECODE TEXT
+
+                break;
+            default:
+              System.out.println("Your input was not recognized, please type 1 or 2 and press enter to choose an encoding process.");
+              main(args);
+          }
+
+        // case image:
+            // get image path
+
+        // case text
+            // ask for text input
+        // ByteArrayToImage(Encode(byteArrayToBinary(imageToBitMap("E:/UNIVERSITY/Forensics/forensics/App/res/tigerSmall.bmp")), imageToBitMap("E:/UNIVERSITY/Forensics/forensics/App/res/baboon.bmp")));
         // System.out.println(byteArrayToBinary(imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/tigerSmall.bmp")));
         // System.out.println(Arrays.toString(imageToBitMap("C:/Users/User/Documents/Forensics/forensics/App/res/tigerSmall.bmp")));
 
-        ByteArrayToImage(binaryToByteArray(Decode(imageToBitMap("C:/Users/User/Desktop/outputfile.bmp"))));
+        // ByteArrayToImage(binaryToByteArray(Decode(imageToBitMap("E:/UNIVERSITY/Forensics/forensics/App/res/outputfile.bmp"))));
 
         // System.out.println(BinaryToText(Decode(imageToBitMap("C:/Users/User/Desktop/outputfile.bmp"))));
     }
@@ -66,7 +131,7 @@ public class App {
         // BufferedImage newImage = ImageIO.read(bis);
         // ImageIO.write(newImage, "bmp", new File("C:/Users/User/Desktop/FixedOut.bmp"));
 
-        File file = new File("C:/Users/User/Desktop/outputfile.bmp"); 
+        File file = new File("E:/UNIVERSITY/Forensics/forensics/App/res/outputfile.bmp"); 
         FileOutputStream fos = null;
 
         try {
