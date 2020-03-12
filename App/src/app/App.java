@@ -2,8 +2,6 @@
 
 */
 
-
-
 package app;
 
 import java.awt.image.BufferedImage;
@@ -14,13 +12,21 @@ import java.util.Scanner;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 public class App {
     public static void main(String[] args) throws Exception {
-
+        String secretImage1 = "";
+        // Get cover image path
+        String coverImage1 = "C:/Users/User/Documents/Forensics/forensics/App/res/baboon.bmp";
+        // Get output path
+        String outPath1 = "C:/Users/User/Documents/Forensics/forensics/App/res/output";
+        ByteArrayToImage(Encode(TextToBinary("hello dawg"), imageToBitMap(coverImage1)), "C:/Users/User/Desktop/outputfile.bmp");
+        System.out.println(BinaryToText(Decode(imageToBitMap("C:/Users/User/Desktop/outputfile.bmp"))));
+    
         // Print menu and ask what the user wants to do
         Scanner scanning = new Scanner(System.in);
         System.out.print("Stegonography menu: ");
@@ -43,9 +49,9 @@ public class App {
                 // Get text to encode
                 String secretText = getUI("Text to encode: ");
                 // Get cover image
-                String coverImage = getUI("Path to cover image: ");
+                String coverImage = "C:/Users/User/Documents/Forensics/forensics/App/res/baboon.bmp";
                 // Get output path
-                String outPath = getUI("Path to output file: ");
+                String outPath = "C:/Users/User/Desktop/outputfile.bmp";
 
                 // Encode
                 ByteArrayToImage(Encode(TextToBinary(secretText), imageToBitMap(coverImage)), outPath);
@@ -62,7 +68,7 @@ public class App {
 
             case "4": // DECODE TEXT
                 // Get encoded image
-                String hiddenImage = getUI("Path to image: ");
+                String hiddenImage = "C:/Users/User/Desktop/outputfile.bmp";
 
                 // Print decoded data
                 BinaryToText(Decode(imageToBitMap(hiddenImage)));
@@ -116,11 +122,11 @@ public class App {
         }
         return null;
     }
+    
+    public static void ByteArrayToImage(byte[] bitMap, String path) throws IOException {
 
-    // Converts a byte array into an image and saves it at a given path
-    public static void ByteArrayToImage(byte[] bitMap, String outputPath) throws IOException {
 
-        File file = new File(outputPath); 
+        File file = new File(path); 
         FileOutputStream fos = null;
 
         try {
@@ -146,8 +152,43 @@ public class App {
             }
  
         }
-        System.out.println("The new image has been saved successfully in "+outputPath);
-    } 
+        System.out.println("The new image has been saved successfully! DEBUG: Currently gets saved to /res folder as outputfile.bmp");
+
+        // To get current directory do;
+        // System.getProperty("user.dir");
+    }
+
+    // // Converts a byte array into an image and saves it at a given path
+    // public static void ByteArrayToImage(byte[] bitMap, String outputPath) throws IOException {
+
+    //     File file = new File(outputPath); 
+    //     FileOutputStream fos = null;
+
+    //     try {
+    //         fos = new FileOutputStream(file);
+    //         // Writes bytes from the specified byte array to this file output stream 
+    //         fos.write(bitMap);
+    //     }
+    //     catch (FileNotFoundException e) {
+    //         System.out.println("File not found" + e);
+    //     }
+    //     catch (IOException ioe) {
+    //         System.out.println("Exception while writing file " + ioe);
+    //     }
+    //     finally {
+    //         // close the streams using close method
+    //         try {
+    //             if (fos != null) {
+    //                 fos.close();
+    //             }
+    //         }
+    //         catch (IOException ioe) {
+    //             System.out.println("Error while closing stream: " + ioe);
+    //         }
+ 
+    //     }
+    //     System.out.println("The new image has been saved successfully in "+outputPath);
+    // } 
 
     // Converts Binary string to text
     public static String BinaryToText(String binary){
